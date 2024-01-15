@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  pg-primary:
+    image: bitnami/postgresql:16.1.0
+    ports:
+      - "6000:5432"
+    environment:
+      POSTGRES_USER: usr_rw
+      POSTGRES_PASSWORD: your_password
+      POSTGRES_DB: legajos_test
+
+  pg-ro1:
+    image: bitnami/postgresql:16.1.0
+    environment:
+      POSTGRES_USER: usr_ro
+      POSTGRES_PASSWORD: your_password
+      POSTGRES_DB: legajos_test
+    depends_on:
+      - pg-primary
+    command: ["postgres", "-c", "max_standby_archive_delay=30s", "-c", "max_standby_streaming_delay=30s", "-c", "hot_standby=on"]
+
+  pg-ro2:
+    image: bitnami/postgresql:16.1.0
+    depends_on:
+      - pg-primary
+    environment:
+      POSTGRES_USER: usr_ro
+      POSTGRES_PASSWORD: your_password
+      POSTGRES_DB: legajos_test
+    command: ["postgres", "-c", "max_standby_archive_delay=30s", "-c", "max_standby_streaming_delay=30s", "-c", "hot_standby=on"]

@@ -1,0 +1,4 @@
+up-log-cluster:
+	docker-compose -f cluster-dc.yml up
+down-log-cluster:
+	docker-compose -f cluster-dc.yml down
